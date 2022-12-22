@@ -36,41 +36,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-exports.routerList = void 0;
+exports.routerList = exports.runner = void 0;
 var getRouterJson_1 = require("../helpers/getRouterJson");
-function runner() {
+var sampleRouterJson_1 = require("../constants/sampleRouterJson");
+var generateNginxConfig_1 = require("../helpers/generateNginxConfig");
+function runner(glueStackPlugin) {
     return __awaiter(this, void 0, void 0, function () {
-        var routes;
+        var routes, urls;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4, (0, getRouterJson_1.getRouterJson)()];
                 case 1:
                     routes = _a.sent();
-                    Object.keys(routes).filter(function (key) {
-                        if (!key.startsWith("@")) {
-                            var domainRoutes = routes[key];
-                            console.log();
-                            console.log("".concat(key, " routes"));
-                            console.table(domainRoutes.map(function (domainRoute) {
-                                return {
-                                    instance: domainRoute.proxy.instance,
-                                    "proxy path": domainRoute.proxy.path,
-                                    path: domainRoute.path
-                                };
-                            }));
-                            console.log();
+                    if (!routes ||
+                        typeof routes !== "object" ||
+                        routes === undefined ||
+                        (typeof routes === "object" && Object.keys(routes).length === 0)) {
+                        console.log("\x1b[33m");
+                        console.log("No routes have been registered with your gluestack app", "\x1b[0m", "\x1b[35m");
+                        console.log("Use this sample router.json and edit meta/router.json");
+                        console.log("\x1b[0m");
+                        console.log(sampleRouterJson_1.sampleRouterJson);
+                    }
+                    else {
+                        urls = (0, generateNginxConfig_1.generateNginxConfig)(routes, glueStackPlugin.app.plugins, false).urls;
+                        if (!urls || !urls.length) {
+                            console.log("\x1b[33m");
+                            console.log("No routes could be loaded, is your gluestack app running on local?", "\x1b[0m");
                         }
-                    });
+                        else {
+                            console.table(urls);
+                        }
+                    }
+                    console.log();
                     return [2];
             }
         });
     });
 }
-function routerList(program) {
+exports.runner = runner;
+function routerList(program, glueStackPlugin) {
     return program
         .command("route:list")
         .description("Prints a table of entries of the registered routes")
-        .action(function () { return runner(); });
+        .action(function () { return runner(glueStackPlugin); });
 }
 exports.routerList = routerList;
 //# sourceMappingURL=routerList.js.map

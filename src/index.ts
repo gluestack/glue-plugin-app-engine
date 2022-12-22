@@ -24,7 +24,7 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   init() {
-    this.app.addCommand(routerList);
+    this.app.addCommand((program:any) => routerList(program, this));
     this.app.addCommand((program:any) => routerGenerate(program, this));
   }
 

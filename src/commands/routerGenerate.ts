@@ -1,6 +1,6 @@
 import { getRouterJson } from "../helpers/getRouterJson";
 import { generateNginxConfig } from "../helpers/generateNginxConfig";
-import { GlueStackPlugin } from "src";
+import { GlueStackPlugin } from "..";
 
 async function runner(glueStackPlugin: GlueStackPlugin) {
   const routes: any = await getRouterJson();
@@ -11,9 +11,9 @@ async function runner(glueStackPlugin: GlueStackPlugin) {
   );
   console.log("\x1b[32m");
   console.log(`nginx config saved to ${path}`, "\x1b[0m");
-  console.log("\x1b[33m");
-  console.log(config);
   console.log("\x1b[0m");
+  console.log(config);
+  console.log();
 }
 
 export function routerGenerate(program: any, glueStackPlugin: GlueStackPlugin) {

@@ -1,1 +1,1 @@
-@gluestack/glue-plugin-app-engine
+@gluestack/glue-plugin-dev-router

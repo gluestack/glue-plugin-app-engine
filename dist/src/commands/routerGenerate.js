@@ -50,9 +50,9 @@ function runner(glueStackPlugin) {
                     _a = (0, generateNginxConfig_1.generateNginxConfig)(routes, glueStackPlugin.app.plugins), config = _a.config, path = _a.path;
                     console.log("\x1b[32m");
                     console.log("nginx config saved to ".concat(path), "\x1b[0m");
-                    console.log("\x1b[33m");
-                    console.log(config);
                     console.log("\x1b[0m");
+                    console.log(config);
+                    console.log();
                     return [2];
             }
         });

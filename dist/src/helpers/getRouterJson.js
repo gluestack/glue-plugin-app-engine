@@ -64,12 +64,14 @@ var fs = __importStar(require("fs"));
 var os = __importStar(require("os"));
 function getRouterJson() {
     return __awaiter(this, void 0, void 0, function () {
-        var rawdata;
+        var path, rawdata;
         return __generator(this, function (_a) {
-            if (!fs.readFileSync) {
-                fs.writeFileSync(process.cwd() + "/meta/routes.json", JSON.stringify({}, null, 2) + os.EOL);
+            path = process.cwd() + "/meta/routes.json";
+            if (!fs.existsSync(path)) {
+                fs.writeFileSync(path, JSON.stringify({}, null, 2) + os.EOL);
+                return [2, {}];
             }
-            rawdata = fs.readFileSync(process.cwd() + "/meta/routes.json");
+            rawdata = fs.readFileSync(path);
             return [2, JSON.parse(rawdata)];
         });
     });

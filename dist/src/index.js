@@ -53,7 +53,7 @@ var GlueStackPlugin = (function () {
     }
     GlueStackPlugin.prototype.init = function () {
         var _this = this;
-        this.app.addCommand(routerList_1.routerList);
+        this.app.addCommand(function (program) { return (0, routerList_1.routerList)(program, _this); });
         this.app.addCommand(function (program) { return (0, routerGenerate_1.routerGenerate)(program, _this); });
     };
     GlueStackPlugin.prototype.destroy = function () {

@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 exports.__esModule = true;
-exports.generateNginxConfig = void 0;
+exports.generateNginxConfig = exports.getInstanceByName = void 0;
 var fs = __importStar(require("fs"));
 function getInstanceByName(instances, name) {
     return instances.filter(function (instance) {
@@ -31,26 +31,29 @@ function getInstanceByName(instances, name) {
             return instance;
     })[0];
 }
+exports.getInstanceByName = getInstanceByName;
 function getIpAddress(containerController) {
     return ((containerController.getIpAddress && containerController.getIpAddress()) ||
-        "127.0.0.1");
+        "localhost");
 }
 function addConfig(json, route, instances) {
     var _a;
+    var url = "";
     var instance = getInstanceByName(instances, route.proxy.instance);
     var config = "";
     if ((_a = instance === null || instance === void 0 ? void 0 : instance.getContainerController()) === null || _a === void 0 ? void 0 : _a.getPortNumber()) {
-        if ("@middleware" in route) {
-            config += "\n  location / {\n    proxy_pass http://".concat(getIpAddress(instance.getContainerController()), ":").concat(instance.getContainerController().getPortNumber(), ";\n    proxy_set_header X-Pre-Middleware ").concat(json["@middlewares"][route["@middleware"]].instance, ";\n  }");
-        }
-        else {
-            config += "\n  location / {\n    proxy_pass http://".concat(getIpAddress(instance.getContainerController()), ":").concat(instance.getContainerController().getPortNumber(), ";\n  }");
-        }
+        url = "http://".concat(getIpAddress(instance.getContainerController()), ":").concat(instance.getContainerController().getPortNumber()).concat(route.path);
+        config += "\n  location ".concat(route.path, " {\n    proxy_pass ").concat(url, ";\n  }");
     }
-    return config;
+    return {
+        str: config,
+        url: url
+    };
 }
-function generateNginxConfig(json, plugins) {
+function generateNginxConfig(json, plugins, write) {
+    if (write === void 0) { write = true; }
     var instances = [];
+    var urls = [];
     for (var _i = 0, plugins_1 = plugins; _i < plugins_1.length; _i++) {
         var plugin = plugins_1[_i];
         for (var _a = 0, _b = plugin.getInstances(); _a < _b.length; _a++) {
@@ -63,31 +66,48 @@ function generateNginxConfig(json, plugins) {
         if (key.startsWith("@")) {
             return;
         }
-        var rootPath = {};
+        var rootPath = null;
         json[key].forEach(function (route) {
             if (route.path === "/") {
                 rootPath = route;
             }
         });
-        config += "server {\n  server_name ".concat(key, ";");
+        config += "server {\n    listen 80;\n    server_name ".concat(key, ";\n    return 301 https://$host$request_uri;\n}\n\nserver {\n  listen 443;\n  server_name ").concat(key, ";\n  ssl_certificate     /etc/ssl/fullchain.pem;\n  ssl_certificate_key /etc/ssl/privkey.pem;\n  ssl on;\n  ssl_session_cache  builtin:1000  shared:SSL:10m;\n  ssl_protocols  TLSv1 TLSv1.1 TLSv1.2;\n  ssl_ciphers HIGH:!aNULL:!eNULL:!EXPORT:!CAMELLIA:!DES:!MD5:!PSK:!RC4;\n  ssl_prefer_server_ciphers on;");
         if (rootPath) {
-            config += addConfig(json, rootPath, instances);
+            var _a = addConfig(json, rootPath, instances), str = _a.str, url = _a.url;
+            config += str;
+            if (url) {
+                urls.push({
+                    url: "https://".concat(key).concat(rootPath.path),
+                    local_url: url
+                });
+            }
         }
         json[key].forEach(function (route) {
             if (route.path === "/") {
                 return;
             }
-            config += addConfig(json, route, instances);
+            var _a = addConfig(json, route, instances), str = _a.str, url = _a.url;
+            config += str;
+            if (url) {
+                urls.push({
+                    url: "https://".concat(key).concat(route.path),
+                    local_url: url
+                });
+            }
         });
-        config += "\n}\n";
+        config += "\n}\n\n";
     });
-    if (!fs.existsSync("./conf.d")) {
-        fs.mkdirSync("./conf.d", { recursive: true });
+    if (write) {
+        if (!fs.existsSync("./conf.d")) {
+            fs.mkdirSync("./conf.d", { recursive: true });
+        }
+        fs.writeFileSync("./conf.d/default.conf", config);
     }
-    fs.writeFileSync("./conf.d/default.conf", config);
     return {
         path: "./conf.d/default.conf",
-        config: config
+        config: config,
+        urls: urls
     };
 }
 exports.generateNginxConfig = generateNginxConfig;

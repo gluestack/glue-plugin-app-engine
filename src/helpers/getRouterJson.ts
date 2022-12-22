@@ -2,13 +2,12 @@ import * as fs from "fs";
 import * as os from "os";
 
 export async function getRouterJson() {
-  if (!fs.readFileSync) {
-    fs.writeFileSync(
-      process.cwd() + "/meta/routes.json",
-      JSON.stringify({}, null, 2) + os.EOL,
-    );
+  const path = process.cwd() + "/meta/routes.json";
+  if (!fs.existsSync(path)) {
+    fs.writeFileSync(path, JSON.stringify({}, null, 2) + os.EOL);
+    return {};
   }
 
-  const rawdata: any = fs.readFileSync(process.cwd() + "/meta/routes.json");
+  const rawdata: any = fs.readFileSync(path);
   return JSON.parse(rawdata);
 }
