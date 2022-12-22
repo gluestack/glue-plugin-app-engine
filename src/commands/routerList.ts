@@ -1,6 +1,5 @@
-import { IRoute } from "../interface/IRoute";
 import { getRouterJson } from "../helpers/getRouterJson";
-import { sampleRouterJson } from "../constants/sampleRouterJson";
+import { sampleRoutesJson } from "../constants/sampleRoutesJson";
 import { generateNginxConfig } from "../helpers/generateNginxConfig";
 import IPlugin from "@gluestack/framework/types/plugin/interface/IPlugin";
 
@@ -18,9 +17,9 @@ export async function runner(glueStackPlugin: IPlugin) {
       "\x1b[0m",
       "\x1b[35m",
     );
-    console.log("Use this sample router.json and edit meta/router.json");
+    console.log("Use this sample routes.json and edit meta/routes.json");
     console.log("\x1b[0m");
-    console.log(sampleRouterJson);
+    console.log(sampleRoutesJson);
   } else {
     const { urls } = generateNginxConfig(
       routes,

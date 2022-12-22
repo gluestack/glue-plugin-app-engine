@@ -1,4 +1,4 @@
-export const sampleRouterJson = `{
+export const sampleRoutesJson = `{
   "web1.local.gluestack.app": [
     {
       "path": "/web/api",

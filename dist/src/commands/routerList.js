@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.routerList = exports.runner = void 0;
 var getRouterJson_1 = require("../helpers/getRouterJson");
-var sampleRouterJson_1 = require("../constants/sampleRouterJson");
+var sampleRoutesJson_1 = require("../constants/sampleRoutesJson");
 var generateNginxConfig_1 = require("../helpers/generateNginxConfig");
 function runner(glueStackPlugin) {
     return __awaiter(this, void 0, void 0, function () {
@@ -54,9 +54,9 @@ function runner(glueStackPlugin) {
                         (typeof routes === "object" && Object.keys(routes).length === 0)) {
                         console.log("\x1b[33m");
                         console.log("No routes have been registered with your gluestack app", "\x1b[0m", "\x1b[35m");
-                        console.log("Use this sample router.json and edit meta/router.json");
+                        console.log("Use this sample routes.json and edit meta/routes.json");
                         console.log("\x1b[0m");
-                        console.log(sampleRouterJson_1.sampleRouterJson);
+                        console.log(sampleRoutesJson_1.sampleRoutesJson);
                     }
                     else {
                         urls = (0, generateNginxConfig_1.generateNginxConfig)(routes, glueStackPlugin.app.plugins, false).urls;

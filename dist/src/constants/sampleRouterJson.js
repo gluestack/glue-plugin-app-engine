@@ -1,5 +1,0 @@
-"use strict";
-exports.__esModule = true;
-exports.sampleRouterJson = void 0;
-exports.sampleRouterJson = "{\n  \"web1.local.gluestack.app\": [\n    {\n      \"path\": \"/web/api\",\n      \"proxy\": {\n        \"instance\": \"web1\",\n        \"path\": \"/api\"\n      }\n    },\n    {\n      \"path\": \"/web/graphql\",\n      \"proxy\": {\n        \"instance\": \"graphql1\",\n        \"path\": \"/v1/graphql\"\n      }\n    },\n    {\n      \"path\": \"/\",\n      \"proxy\": {\n        \"instance\": \"web1\",\n        \"path\": \"/\"\n      }\n    }\n  ],\n  \"web2.local.gluestack.app\": [\n    {\n      \"path\": \"/\",\n      \"proxy\": {\n        \"instance\": \"web2\",\n        \"path\": \"/\"\n      }\n    },\n    {\n      \"path\": \"/auth/signin\",\n      \"proxy\": {\n        \"instance\": \"auth1\",\n        \"path\": \"/auth/signin\"\n      }\n    }\n  ]\n}";
-//# sourceMappingURL=sampleRouterJson.js.map
