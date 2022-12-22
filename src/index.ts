@@ -24,8 +24,8 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   init() {
-    this.app.addCommand((program:any) => routerList(program, this));
-    this.app.addCommand((program:any) => routerGenerate(program, this));
+    this.app.addCommand((program: any) => routerList(program, this));
+    this.app.addCommand((program: any) => routerGenerate(program, this));
   }
 
   destroy() {
@@ -53,12 +53,21 @@ export class GlueStackPlugin implements IPlugin, IManagesInstances, ILifeCycle {
   }
 
   async runPostInstall(instanceName: string, target: string) {
-    await this.app.createPluginInstance(
-      this,
-      instanceName,
-      this.getTemplateFolderPath(),
-      target,
+    const devProcessRouter: GlueStackPlugin = this.app.getPluginByName(
+      "@gluestack/glue-plugin-dev-router",
     );
+    //Validation
+    if (
+      devProcessRouter &&
+      devProcessRouter.getInstances() &&
+      devProcessRouter.getInstances()[0]
+    ) {
+      throw new Error(
+        `Dev router instance already installed as ${devProcessRouter
+          .getInstances()[0]
+          .getName()}`,
+      );
+    }
   }
 
   createInstance(

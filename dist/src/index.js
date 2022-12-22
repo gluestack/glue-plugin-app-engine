@@ -75,13 +75,17 @@ var GlueStackPlugin = (function () {
     };
     GlueStackPlugin.prototype.runPostInstall = function (instanceName, target) {
         return __awaiter(this, void 0, void 0, function () {
+            var devProcessRouter;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.app.createPluginInstance(this, instanceName, this.getTemplateFolderPath(), target)];
-                    case 1:
-                        _a.sent();
-                        return [2];
+                devProcessRouter = this.app.getPluginByName("@gluestack/glue-plugin-dev-router");
+                if (devProcessRouter &&
+                    devProcessRouter.getInstances() &&
+                    devProcessRouter.getInstances()[0]) {
+                    throw new Error("Dev router instance already installed as ".concat(devProcessRouter
+                        .getInstances()[0]
+                        .getName()));
                 }
+                return [2];
             });
         });
     };

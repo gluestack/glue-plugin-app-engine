@@ -1,14 +1,14 @@
 {
     "name": "@gluestack/glue-plugin-dev-router",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "dev-router for gluestack app",
     "repository": {
         "type": "git",
-        "url": "https://github.com/gluestack/create-gluestack-app"
+        "url": "https://github.com/gluestack/glue-plugin-dev-router"
     },
     "keywords": [
         "npm",
-        "create-gluestack-app"
+        "glue-plugin-dev-router"
     ],
     "author": "Shivam Singhal",
     "license": "ISC",
