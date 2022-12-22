@@ -46,7 +46,7 @@ var routerList_1 = require("./commands/routerList");
 var routerGenerate_1 = require("./commands/routerGenerate");
 var GlueStackPlugin = (function () {
     function GlueStackPlugin(app, gluePluginStore) {
-        this.type = "stateless";
+        this.type = "devonly";
         this.app = app;
         this.instances = [];
         this.gluePluginStore = gluePluginStore;
