@@ -41,8 +41,8 @@ function addConfig(json, route, instances) {
     var url = "";
     var instance = getInstanceByName(instances, route.proxy.instance);
     var config = "";
-    if ((_a = instance === null || instance === void 0 ? void 0 : instance.getContainerController()) === null || _a === void 0 ? void 0 : _a.getPortNumber()) {
-        url = "http://".concat(getIpAddress(instance.getContainerController()), ":").concat(instance.getContainerController().getPortNumber()).concat(route.path);
+    if ((_a = instance === null || instance === void 0 ? void 0 : instance.getContainerController()) === null || _a === void 0 ? void 0 : _a.portNumber) {
+        url = "http://".concat(getIpAddress(instance.getContainerController()), ":").concat(instance.getContainerController().portNumber).concat(route.path);
         config += "\n  location ".concat(route.path, " {\n    proxy_pass ").concat(url, ";\n  }");
     }
     return {
@@ -77,10 +77,7 @@ function generateNginxConfig(json, plugins, write) {
             var _a = addConfig(json, rootPath, instances), str = _a.str, url = _a.url;
             config += str;
             if (url) {
-                urls.push({
-                    url: "https://".concat(key).concat(rootPath.path),
-                    local_url: url
-                });
+                pushUrl(urls, url, key, rootPath);
             }
         }
         json[key].forEach(function (route) {
@@ -90,10 +87,7 @@ function generateNginxConfig(json, plugins, write) {
             var _a = addConfig(json, route, instances), str = _a.str, url = _a.url;
             config += str;
             if (url) {
-                urls.push({
-                    url: "https://".concat(key).concat(route.path),
-                    local_url: url
-                });
+                pushUrl(urls, url, key, route);
             }
         });
         config += "\n}\n\n";
@@ -111,4 +105,11 @@ function generateNginxConfig(json, plugins, write) {
     };
 }
 exports.generateNginxConfig = generateNginxConfig;
+function pushUrl(urls, url, key, route) {
+    if (urls === void 0) { urls = []; }
+    urls.push({
+        "local url": url,
+        "https url (coming soon)": "https://".concat(key).concat(route.path)
+    });
+}
 //# sourceMappingURL=generateNginxConfig.js.map

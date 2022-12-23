@@ -25,11 +25,11 @@ function addConfig(json: any, route: any, instances: any) {
   let url = "";
   const instance = getInstanceByName(instances, route.proxy.instance);
   let config = "";
-  if (instance?.getContainerController()?.getPortNumber()) {
+  if (instance?.getContainerController()?.portNumber) {
     url = `http://${getIpAddress(
       //@ts-ignore
       instance.getContainerController(),
-    )}:${instance.getContainerController().getPortNumber()}${route.path}`;
+    )}:${instance.getContainerController().portNumber}${route.path}`;
     config += `
   location ${route.path} {
     proxy_pass ${url};
@@ -88,10 +88,7 @@ server {
       const { str, url }: any = addConfig(json, rootPath, instances);
       config += str;
       if (url) {
-        urls.push({
-          url: `https://${key}${rootPath.path}`,
-          local_url: url,
-        });
+        pushUrl(urls, url, key, rootPath);
       }
     }
 
@@ -102,10 +99,7 @@ server {
       const { str, url }: any = addConfig(json, route, instances);
       config += str;
       if (url) {
-        urls.push({
-          url: `https://${key}${route.path}`,
-          local_url: url,
-        });
+        pushUrl(urls, url, key, route);
       }
     });
     config += "\n}\n\n";
@@ -126,13 +120,20 @@ server {
   };
 }
 
+function pushUrl(urls: any = [], url: string, key: string, route: any) {
+  urls.push({
+    "local url": url,
+    "https url (coming soon)": `https://${key}${route.path}`,
+  });
+}
+
 /*if ("@middleware" in route) {
       config += `
   location ${route.path} {
     proxy_pass http://${getIpAddress(
       //@ts-ignore
       instance.getContainerController(),
-    )}:${instance.getContainerController().getPortNumber()};
+    )}:${instance.getContainerController().portNumber};
     proxy_set_header X-Pre-Middleware ${
       json["@middlewares"][route["@middleware"]].instance
     };
