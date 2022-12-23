@@ -29,7 +29,7 @@ function addConfig(json: any, route: any, instances: any) {
     url = `http://${getIpAddress(
       //@ts-ignore
       instance.getContainerController(),
-    )}:${instance.getContainerController().portNumber}${route.path}`;
+    )}:${instance.getContainerController().portNumber}${route.proxy.path}`;
     config += `
   location ${route.path} {
     proxy_pass ${url};

@@ -42,7 +42,7 @@ function addConfig(json, route, instances) {
     var instance = getInstanceByName(instances, route.proxy.instance);
     var config = "";
     if ((_a = instance === null || instance === void 0 ? void 0 : instance.getContainerController()) === null || _a === void 0 ? void 0 : _a.portNumber) {
-        url = "http://".concat(getIpAddress(instance.getContainerController()), ":").concat(instance.getContainerController().portNumber).concat(route.path);
+        url = "http://".concat(getIpAddress(instance.getContainerController()), ":").concat(instance.getContainerController().portNumber).concat(route.proxy.path);
         config += "\n  location ".concat(route.path, " {\n    proxy_pass ").concat(url, ";\n  }");
     }
     return {
